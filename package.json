@@ -1,0 +1,21 @@
+{
+    "name": "product-store",
+    "version": "1.0.0",
+    "description": "1. npm init -y -> in base folder, to the easy of deployment",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon backend/server.js"
+    },
+    "type": "module",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1",
+        "mongoose": "^8.8.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}
