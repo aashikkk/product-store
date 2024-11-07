@@ -93,41 +93,41 @@ export default Product;
 10. Building an API
     ![alt text](imgs/API.png)
 
-Check this using Postman
+-   Check this using Postman
 
-    Creating products (post)
+**Creating products (post)**
 
-        1. get the input from req.body
-        2. check all fields are required/validate, res status 400, error msg
-        3. create new product(from model) as newProduct
-        4. try-catch
-            save into db, res status 201 success, return product
-            error msg, res status 500 suc:false, error msg
+1. get the input from req.body
+2. check all fields are required/validate, res status 400, error msg
+3. create new product(from model) as newProduct
+4. try-catch
+   save into db, res status 201 success, return product
+   error msg, res status 500 suc:false, error msg
 
-        ```javascript
+```javascript
+app.use(express.json()); // allows us to accept JSON data in the req.body OR Middleware
 
-        app.use(express.json()); // allows us to accept JSON data in the req.body OR Middleware
+app.post("/api/products", async (req, res) => {
+    const product = req.body; // user will send this data
 
-        app.post("/api/products", async (req, res) => {
-        const product = req.body; // user will send this data
+    if (!product.name || !product.price || !product.image) {
+        return res
+            .status(400)
+            .json({ success: false, message: "Please provide all fields" });
+    }
 
-        if (!product.name || !product.price || !product.image) {
-            return res.status(400).json({ success: false, message: "Please provide all fields" });
-        }
+    const newProduct = new Product(product);
 
-        const newProduct = new Product(product);
+    try {
+        await newProduct.save();
+        res.status(201).json({ success: true, data: newProduct });
+    } catch (error) {
+        console.error(`Error in Create product: ${error.message}`);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
+```
 
-        try {
-            await newProduct.save();
-            res.status(201).json({ success: true, data: newProduct });
-        } catch (error) {
-            console.error(`Error in Create product: ${error.message}`);
-            res.status(500).json({ success: false, message: "Server Error" });
-        }
-
-        });
-
-````
 ```json
 // Output:
 {
@@ -141,10 +141,10 @@ Check this using Postman
         "updatedAt": "2024-11-07T14:20:51.096Z",
         "__v": 0  //versionKey - how many times we modified
     }
-````
+```
 
 // find all documents
-await MyModel.find({});
+.find({});
 
 // delete
 .findByIdAndDelete(id); - get by req params. - and pass as argument
@@ -157,21 +157,21 @@ new: true - return the modified full product
 -   get the data from req.body
 -   validate if id is there
 
-````js
- if (!mongoose.Types.ObjectId.isValid(id)) {
-       return res.status(404).json({ message: "Invalid Product ID" });
-   }
+```js
+if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ message: "Invalid Product ID" });
+}
 
-   // actually it checks the number of digits.
-   // it will be a not a case for front end.
+// actually it checks the number of digits.
+// it will be a not a case for front end.
 ```
+
 -   findByIdAndUpdate(id);
 -   return updated data
 
-
 **refactor now by organizing into routes file.**
 
-- import Productmodel, mongoose, express
+-   import Productmodel, mongoose, express
 
 ```js
 import express from "express";
@@ -193,6 +193,7 @@ router.get("/", async (req, res) => {
 ```
 
 in server.js
+
 ```js
 import productRoutes from "./routes/product.route.js";
 
@@ -200,6 +201,7 @@ app.use("/api/products", productRoutes);
 ```
 
 **Now making more organizing create controller**
+
 ```javascript
 // product.controller.js
 
@@ -217,8 +219,6 @@ export const getProducts = async (req, res) => {
 };
 
 // remaining like in same format
-
-
 
 // product.route.js
 import express from "express";
@@ -240,17 +240,6 @@ router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 
 export default router;
-
-
 ```
-
-
-Now import
 
 NOTE: If you wanna use await, you should create async function.
-
-````
-
-```
-
-```
