@@ -406,3 +406,56 @@ rules: {
 ```
 
 ![alt text](imgs/UIUpdateProdModel.png)
+
+# Deployment
+
+```js
+//server.js
+import path from "path";
+const __dirname = path.resolve();
+```
+
+// Now run in the terminal while in frontend, it will build the dist folder for deployment and it will say build for production
+`npm run build`
+
+```js
+//server.js
+
+// when in production, we use frontend app as static folder
+// now we will use dist folder as static folder
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+    // when we hit other than 'api/products/'  it will return index.html
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+    });
+}
+```
+
+Update the script in base JSON file. and delete node_modules under base folder and frontend folder and then dist as well
+and start the server once with node as well
+
+```json
+ "scripts": {
+        "dev": "cross-env NODE_ENV=development nodemon backend/server.js",
+        "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+        "start": "cross-env NODE_ENV=production node backend/server.js"
+    },
+```
+
+now run `npm run build` in base directory
+
+For those who are getting this error
+"NODE_ENV" is not recognized as an internal or external command, operable command or batch file.
+
+install this -
+`npm install cross-env --save-dev`
+then add cross-env before both -
+
+    "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon backend/server.js",
+    "start": "cross-env NODE_ENV=production node backend/server.js"
+    }
+
+then npm run start

@@ -4,7 +4,9 @@
     "description": "1. npm init -y -> in base folder, to the easy of deployment",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon backend/server.js"
+        "dev": "cross-env NODE_ENV=development nodemon backend/server.js",
+        "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+        "start": "cross-env NODE_ENV=production node backend/server.js"
     },
     "type": "module",
     "keywords": [],
@@ -16,6 +18,7 @@
         "mongoose": "^8.8.0"
     },
     "devDependencies": {
+        "cross-env": "^7.0.3",
         "nodemon": "^2.0.15"
     }
 }
