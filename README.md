@@ -1,3 +1,5 @@
+# BACKEND
+
 1. npm init -y -> in base folder, to the easy of deployment
 
 2. install required packages
@@ -243,3 +245,164 @@ export default router;
 ```
 
 NOTE: If you wanna use await, you should create async function.
+
+# FRONTEND
+
+**Using Chakra UI v2 to build faster the UI. Chakra v3 also released now** [Chakra v2](https://v2.chakra-ui.com/getting-started)
+
+```bash
+npm i @chakra-ui/react@v2.10.4 @emotion/react @emotion/styled framer-motion
+npm i @chakra-ui/icons@v2.1.1
+```
+
+![UI gonna build](imgs/UIHome.png)
+
+```jsx
+<Box minH={"100vh"}>
+    <Navbar /> <!--When we put Navbar outer the route wherever we go it will display on top --!>
+    <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/create" element={<CreatePage />} />
+    </Routes>
+</Box>
+```
+
+![alt text](imgs/UICreate.png)
+
+Zustand for state management for smaller projects
+`npm i zustand`
+
+```js
+//store/products.js
+import { create } from "zustand";
+
+export const useProductStore = create((set) => ({
+    products: [],
+    setProducts: (products) => set({ products }),
+    createProduct: async (newProduct) => {
+        if (!newProduct.name || newProduct.price || newProduct.image) {
+            return { success: false, message: "Please fill in all fields" };
+        }
+
+        const res = await fetch("/api/products", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newProduct),
+        });
+
+        const data = await res.json();
+        set((state) => ({ products: [...state.products, data.data] }));
+    },
+
+    // addProduct: (product) => set((state) => ({products: [...state.products, product]})), When only using state
+}));
+```
+
+```js
+// https://vite.dev/config/
+export default defineConfig({
+    plugins: [react()],
+    server: {
+        proxy: {
+            "/api": {
+                target: "http://localhost:5000",
+            },
+        },
+    },
+});
+
+// Whenever hit /api, it will set from localhost:5000
+```
+
+![alt text](imgs/UIProductCard.png)
+
+To turn off props-types error
+
+```js
+//eslint.config.js
+rules: {
+            "react/prop-types": "off",
+            ...
+        }
+
+```
+
+```js
+
+// Conditional rendering good to me rather than m2
+{products.length === 0 ? (
+                    <Text
+                        fontSize="xl"
+                        textAlign={"center"}
+                        fontWeight="bold"
+                        color="gray.500"
+                    >
+                        No products found 😢{" "}
+                        <Link to={"/create"}>
+                            <Text
+                                as="span"
+                                color="blue.500"
+                                _hover={{ textDecoration: "underline" }}
+                            >
+                                Create a product
+                            </Text>
+                        </Link>
+                    </Text>
+                ) : (
+                    <SimpleGrid
+                        columns={{
+                            base: 1,
+                            md: 2,
+                            lg: 3,
+                        }}
+                        spacing={10}
+                        w={"full"}
+                    >
+                        {products.map((product) => (
+                            <ProductCard key={product._id} product={product} />
+                        ))}
+                    </SimpleGrid>
+}
+
+// M2
+
+                    <SimpleGrid
+                        columns={{
+                            base: 1,
+                            md: 2,
+                            lg: 3,
+                        }}
+                        spacing={10}
+                        w={"full"}
+                    >
+                        {products.map((product) => (
+                            <ProductCard key={product._id} product={product} />
+                        ))}
+                    </SimpleGrid>
+
+                {products.length === 0 && (
+                    <Text
+                        fontSize="xl"
+                        textAlign={"center"}
+                        fontWeight="bold"
+                        color="gray.500"
+                    >
+                        No products found 😢{" "}
+                        <Link to={"/create"}>
+                            <Text
+                                as="span"
+                                color="blue.500"
+                                _hover={{ textDecoration: "underline" }}
+                            >
+                                Create a product
+                            </Text>
+                        </Link>
+                    </Text>
+                )
+}
+
+```
+
+![alt text](imgs/UIUpdateProdModel.png)
