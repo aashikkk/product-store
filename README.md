@@ -1,3 +1,9 @@
+```bash
+//.env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.03tvd.mongodb.net/products?retryWrites=true&w=majority&appName=Cluster0
+PORT=5000
+```
+
 # BACKEND
 
 1. npm init -y -> in base folder, to the easy of deployment
@@ -459,3 +465,8 @@ then add cross-env before both -
     }
 
 then npm run start
+
+References:
+[Zustand](https://zustand-demo.pmnd.rs/)
+[React Icons](https://react-icons.github.io/react-icons/)
+[Chakra UI v2](https://v2.chakra-ui.com/)
